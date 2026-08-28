@@ -1,0 +1,32 @@
+{
+  "name": "taskflow-saas",
+  "version": "1.0.0",
+  "description": "Production-grade Project & Task Management SaaS application built with Vanilla JS, CSS3, and LocalStorage persistence.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "lint": "eslint src/ --ext .js"
+  },
+  "keywords": [
+    "saas",
+    "task-management",
+    "kanban",
+    "calendar",
+    "analytics",
+    "vanilla-js",
+    "localstorage"
+  ],
+  "author": "TaskFlow Engineering",
+  "license": "Proprietary",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.4.0",
+    "jsdom": "^24.0.0",
+    "vite": "^5.2.0",
+    "vitest": "^1.4.0"
+  }
+}
