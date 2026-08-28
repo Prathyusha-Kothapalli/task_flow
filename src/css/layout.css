@@ -1,0 +1,107 @@
+/* ==========================================================================
+   LAYOUT STRUCTURE (GRID, NAVBAR, SIDEBAR, RESPONSIVE CONTAINER)
+   ========================================================================== */
+
+#app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Auth Container Layout */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 20%, hsla(var(--color-primary-hue), 80%, 25%, 0.25), transparent 70%),
+              var(--bg-app);
+  padding: var(--space-4);
+}
+
+/* Main Dashboard App Layout */
+.main-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: var(--navbar-height) 1fr;
+  grid-template-areas:
+    "sidebar navbar"
+    "sidebar main";
+  min-height: 100vh;
+  transition: grid-template-columns var(--transition-normal);
+}
+
+.main-layout.sidebar-collapsed {
+  grid-template-columns: var(--sidebar-collapsed-width) 1fr;
+}
+
+/* Header Navbar */
+.app-header {
+  grid-area: navbar;
+  height: var(--navbar-height);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* Sidebar Navigation */
+.app-sidebar {
+  grid-area: sidebar;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: width var(--transition-normal);
+  overflow-y: auto;
+}
+
+/* Main Content Area */
+.app-main {
+  grid-area: main;
+  padding: var(--space-6);
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: calc(100vh - var(--navbar-height));
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive Mobile Layout Breakpoints */
+@media (max-width: 900px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "navbar"
+      "main";
+  }
+
+  .app-sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    width: 280px;
+    box-shadow: var(--shadow-xl);
+    transition: left var(--transition-normal);
+  }
+
+  .app-sidebar.mobile-open {
+    left: 0;
+  }
+
+  .app-main {
+    padding: var(--space-4);
+  }
+}
