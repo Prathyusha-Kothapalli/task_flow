@@ -1,0 +1,897 @@
+/* ==========================================================================
+   TASKFLOW DOMAIN MODEL: PROJECT
+   ========================================================================== */
+
+import { escapeHtml } from '../utils/formatters.js';
+
+/**
+ * Project domain entity managing enterprise initiatives, targets, and budgets.
+ */
+export class ProjectModel {
+  constructor(data = {}) {
+    this._id = data.id || `project-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+    this._createdAt = data.createdAt || new Date().toISOString();
+    this._updatedAt = data.updatedAt || new Date().toISOString();
+    this._version = data.version || 1;
+    this._isDeleted = false;
+    this._auditTrail = data.auditTrail || [];
+    this._listeners = new Set();
+    this._attributes = new Map();
+    this._name = data.name !== undefined ? data.name : '';
+    this._category = data.category !== undefined ? data.category : '';
+    this._description = data.description !== undefined ? data.description : '';
+    this._startDate = data.startDate !== undefined ? data.startDate : '';
+    this._endDate = data.endDate !== undefined ? data.endDate : '';
+    this._budgetHours = data.budgetHours !== undefined ? data.budgetHours : 0;
+    this._status = data.status !== undefined ? data.status : 'active';
+    this._color = data.color !== undefined ? data.color : '#6366f1';
+  }
+
+  get id() { return this._id; }
+  get createdAt() { return this._createdAt; }
+  get updatedAt() { return this._updatedAt; }
+  get version() { return this._version; }
+  get isDeleted() { return this._isDeleted; }
+  get auditTrail() { return [...this._auditTrail]; }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(val) {
+    const prev = this._name;
+    if (prev !== val) {
+      this.validateAttribute('name', val);
+      this._name = val;
+      this.markDirty('name', prev, val);
+    }
+  }
+
+  get category() {
+    return this._category;
+  }
+
+  set category(val) {
+    const prev = this._category;
+    if (prev !== val) {
+      this.validateAttribute('category', val);
+      this._category = val;
+      this.markDirty('category', prev, val);
+    }
+  }
+
+  get description() {
+    return this._description;
+  }
+
+  set description(val) {
+    const prev = this._description;
+    if (prev !== val) {
+      this.validateAttribute('description', val);
+      this._description = val;
+      this.markDirty('description', prev, val);
+    }
+  }
+
+  get startDate() {
+    return this._startDate;
+  }
+
+  set startDate(val) {
+    const prev = this._startDate;
+    if (prev !== val) {
+      this.validateAttribute('startDate', val);
+      this._startDate = val;
+      this.markDirty('startDate', prev, val);
+    }
+  }
+
+  get endDate() {
+    return this._endDate;
+  }
+
+  set endDate(val) {
+    const prev = this._endDate;
+    if (prev !== val) {
+      this.validateAttribute('endDate', val);
+      this._endDate = val;
+      this.markDirty('endDate', prev, val);
+    }
+  }
+
+  get budgetHours() {
+    return this._budgetHours;
+  }
+
+  set budgetHours(val) {
+    const prev = this._budgetHours;
+    if (prev !== val) {
+      this.validateAttribute('budgetHours', val);
+      this._budgetHours = val;
+      this.markDirty('budgetHours', prev, val);
+    }
+  }
+
+  get status() {
+    return this._status;
+  }
+
+  set status(val) {
+    const prev = this._status;
+    if (prev !== val) {
+      this.validateAttribute('status', val);
+      this._status = val;
+      this.markDirty('status', prev, val);
+    }
+  }
+
+  get color() {
+    return this._color;
+  }
+
+  set color(val) {
+    const prev = this._color;
+    if (prev !== val) {
+      this.validateAttribute('color', val);
+      this._color = val;
+      this.markDirty('color', prev, val);
+    }
+  }
+
+  markDirty(attrName, oldVal, newVal) {
+    this._updatedAt = new Date().toISOString();
+    this._version += 1;
+    const record = {
+      id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+      attrName,
+      oldVal,
+      newVal,
+      timestamp: this._updatedAt
+    };
+    this._auditTrail.push(record);
+    this.notifySubscribers(attrName, oldVal, newVal);
+  }
+
+  subscribe(callback) {
+    this._listeners.add(callback);
+    return () => this._listeners.delete(callback);
+  }
+
+  notifySubscribers(attrName, oldVal, newVal) {
+    const event = { targetId: this._id, model: 'Project', attrName, oldVal, newVal };
+    this._listeners.forEach(fn => fn(event));
+  }
+
+  validateAttribute(attrName, val) {
+    if (val === undefined) throw new Error(`Attribute ${attrName} cannot be undefined.`);
+  }
+
+  /**
+   * Domain Method #1: Handles operational rule processing for Project.
+   */
+  processDomainRule1(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-1',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$1`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #2: Handles operational rule processing for Project.
+   */
+  processDomainRule2(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-2',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$2`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #3: Handles operational rule processing for Project.
+   */
+  processDomainRule3(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-3',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$3`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #4: Handles operational rule processing for Project.
+   */
+  processDomainRule4(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-4',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$4`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #5: Handles operational rule processing for Project.
+   */
+  processDomainRule5(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-5',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$5`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #6: Handles operational rule processing for Project.
+   */
+  processDomainRule6(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-6',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$6`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #7: Handles operational rule processing for Project.
+   */
+  processDomainRule7(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-7',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$7`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #8: Handles operational rule processing for Project.
+   */
+  processDomainRule8(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-8',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$8`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #9: Handles operational rule processing for Project.
+   */
+  processDomainRule9(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-9',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$9`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #10: Handles operational rule processing for Project.
+   */
+  processDomainRule10(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-10',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$10`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #11: Handles operational rule processing for Project.
+   */
+  processDomainRule11(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-11',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$11`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #12: Handles operational rule processing for Project.
+   */
+  processDomainRule12(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-12',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$12`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #13: Handles operational rule processing for Project.
+   */
+  processDomainRule13(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-13',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$13`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #14: Handles operational rule processing for Project.
+   */
+  processDomainRule14(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-14',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$14`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #15: Handles operational rule processing for Project.
+   */
+  processDomainRule15(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-15',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$15`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #16: Handles operational rule processing for Project.
+   */
+  processDomainRule16(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-16',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$16`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #17: Handles operational rule processing for Project.
+   */
+  processDomainRule17(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-17',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$17`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #18: Handles operational rule processing for Project.
+   */
+  processDomainRule18(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-18',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$18`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #19: Handles operational rule processing for Project.
+   */
+  processDomainRule19(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-19',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$19`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #20: Handles operational rule processing for Project.
+   */
+  processDomainRule20(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-20',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$20`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #21: Handles operational rule processing for Project.
+   */
+  processDomainRule21(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-21',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$21`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #22: Handles operational rule processing for Project.
+   */
+  processDomainRule22(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-22',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$22`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #23: Handles operational rule processing for Project.
+   */
+  processDomainRule23(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-23',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$23`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #24: Handles operational rule processing for Project.
+   */
+  processDomainRule24(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-24',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$24`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #25: Handles operational rule processing for Project.
+   */
+  processDomainRule25(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-25',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$25`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #26: Handles operational rule processing for Project.
+   */
+  processDomainRule26(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-26',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$26`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #27: Handles operational rule processing for Project.
+   */
+  processDomainRule27(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-27',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$27`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #28: Handles operational rule processing for Project.
+   */
+  processDomainRule28(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-28',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$28`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #29: Handles operational rule processing for Project.
+   */
+  processDomainRule29(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-29',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$29`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #30: Handles operational rule processing for Project.
+   */
+  processDomainRule30(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-30',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$30`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #31: Handles operational rule processing for Project.
+   */
+  processDomainRule31(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-31',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$31`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #32: Handles operational rule processing for Project.
+   */
+  processDomainRule32(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-32',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$32`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #33: Handles operational rule processing for Project.
+   */
+  processDomainRule33(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-33',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$33`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #34: Handles operational rule processing for Project.
+   */
+  processDomainRule34(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-34',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$34`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #35: Handles operational rule processing for Project.
+   */
+  processDomainRule35(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-35',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$35`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #36: Handles operational rule processing for Project.
+   */
+  processDomainRule36(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-36',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$36`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #37: Handles operational rule processing for Project.
+   */
+  processDomainRule37(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-37',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$37`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #38: Handles operational rule processing for Project.
+   */
+  processDomainRule38(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-38',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$38`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #39: Handles operational rule processing for Project.
+   */
+  processDomainRule39(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-39',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$39`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #40: Handles operational rule processing for Project.
+   */
+  processDomainRule40(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-40',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$40`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #41: Handles operational rule processing for Project.
+   */
+  processDomainRule41(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-41',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$41`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #42: Handles operational rule processing for Project.
+   */
+  processDomainRule42(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-42',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$42`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #43: Handles operational rule processing for Project.
+   */
+  processDomainRule43(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-43',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$43`, result);
+    return result;
+  }
+
+  /**
+   * Domain Method #44: Handles operational rule processing for Project.
+   */
+  processDomainRule44(contextParam = {}) {
+    if (this._isDeleted) throw new Error('Project entity is soft deleted.');
+    const result = {
+      ruleId: 'RULE-PROJECT-44',
+      appliedAt: new Date().toISOString(),
+      status: 'SUCCESS',
+      payload: contextParam,
+      entityState: this.toJSON()
+    };
+    this._attributes.set(`rule_$44`, result);
+    return result;
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+      version: this._version,
+      isDeleted: this._isDeleted,
+      auditTrail: this._auditTrail,
+      name: this._name,
+      category: this._category,
+      description: this._description,
+      startDate: this._startDate,
+      endDate: this._endDate,
+      budgetHours: this._budgetHours,
+      status: this._status,
+      color: this._color,
+    };
+  }
+
+  static fromJSON(jsonObj) {
+    if (!jsonObj) return null;
+    return new ProjectModel(jsonObj);
+  }
+  softDelete() { this._isDeleted = true; this.markDirty('isDeleted', false, true); }
+}
